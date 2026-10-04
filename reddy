@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Service Center Management System</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --page-bg: #f4f6f9;
+            --card-bg: #ffffff;
+        }
+
+        [data-bs-theme="dark"] {
+            --page-bg: #111827;
+            --card-bg: #1f2937;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--page-bg);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .card {
+            border: none;
+            border-radius: 14px;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .navbar-brand {
+            letter-spacing: 0.3px;
+        }
+
+        .login-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #0d6efd, #6610f2);
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 430px;
+            padding: 35px;
+            border-radius: 18px;
+            background: var(--card-bg);
+        }
+
+        .login-logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: #0d6efd;
+            color: white;
+            font-size: 35px;
+        }
+
+        .demo-login {
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            background: rgba(13, 110, 253, 0.1);
+        }
+
+        .statistic-card {
+            min-height: 165px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .statistic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .statistic-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            font-size: 25px;
+        }
+
+        .form-container {
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 32px;
+            border-radius: 14px;
+            background: var(--card-bg);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .table {
+            vertical-align: middle;
+        }
+
+        .table th {
+            white-space: nowrap;
+        }
+
+        .empty-message {
+            padding: 50px 20px;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        .empty-message i {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 50px;
+        }
+
+        [data-bs-theme="dark"] .form-control,
+        [data-bs-theme="dark"] .form-select,
+        [data-bs-theme="dark"] .input-group-text {
+            color: #f8f9fa;
+            background-color: #111827;
+            border-color: #495057;
+        }
+
+        [data-bs-theme="dark"] .form-control::placeholder {
+            color: #adb5bd;
+        }
+
+        [data-bs-theme="dark"] .table {
+            --bs-table-bg: transparent;
+            --bs-table-color: #f8f9fa;
+        }
+
+        [data-bs-theme="dark"] .text-muted {
+            color: #adb5bd !important;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            .login-card {
+                padding: 25px;
+            }
+
+            .table {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= LOGIN PAGE ================= -->
+
+<section id="loginPage" class="login-page">
+
+    <div class="login-card card">
+
+        <div class="text-center mb-4">
+            <div class="login-logo">
+                <i class="bi bi-tools"></i>
+            </div>
+
+            <h2 class="fw-bold mt-3">Service Center</h2>
+            <p class="text-muted">Management System</p>
+        </div>
+
+        <div id="loginMessage"></div>
+
+        <form id="loginForm">
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person"></i>
+                    </span>
+
+                    <input
+                        type="text"
+                        id="username"
+                        class="form-control"
+                        placeholder="Enter username"
+                        required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-lock"></i>
+                    </span>
+
+                    <input
+                        type="password"
+                        id="password"
+                        class="form-control"
+                        placeholder="Enter password"
+                        required>
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        id="togglePassword">
+
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-check mb-3">
+                <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="rememberMe">
+
+                <label class="form-check-label" for="rememberMe">
+                    Remember me
+                </label>
+            </div>
+
+            <button class="btn btn-primary w-100 py-2">
+                <i class="bi bi-box-arrow-in-right"></i>
+                Login
+            </button>
+
+        </form>
+
+        <div class="demo-login mt-4">
+            <small>
+                Demo Login<br>
+                Username: <strong>admin</strong><br>
+                Password: <strong>admin123</strong>
+            </small>
+        </div>
+
+        <div class="text-center mt-3">
+            <button
+                class="btn btn-sm btn-outline-secondary"
+                onclick="toggleTheme()">
+
+                <i id="loginThemeIcon" class="bi bi-moon-stars"></i>
+                Toggle Theme
+            </button>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= MAIN APPLICATION ================= -->
+
+<section id="appPage" class="d-none">
+
+    <!-- Navigation -->
+
+    <nav class="navbar navbar-expand-lg bg-primary navbar-dark shadow-sm">
+        <div class="container-fluid">
+
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-tools"></i>
+                Service Center
+            </a>
+
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar">
+
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+
+                <ul class="navbar-nav me-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="bi bi-speedometer2"></i>
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <button
+                            class="nav-link btn text-start"
+                            onclick="openAddServiceForm()">
+
+                            <i class="bi bi-plus-circle"></i>
+                            Add Service
+                        </button>
+                    </li>
+
+                </ul>
+
+                <div class="d-flex align-items-center gap-2">
+
+                    <button
+                        class="btn btn-outline-light btn-sm"
+                        onclick="toggleTheme()">
+
+                        <i id="themeIcon" class="bi bi-moon-stars"></i>
+                    </button>
+
+                    <span class="text-white small">
+                        <i class="bi bi-person-circle"></i>
+                        <span id="currentUser">Admin</span>
+                    </span>
+
+                    <button
+                        class="btn btn-light btn-sm"
+                        onclick="logout()">
+
+                        <i class="bi bi-box-arrow-right"></i>
+                        Logout
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard -->
+
+    <main id="dashboardPage" class="container-fluid py-4">
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+
+            <div>
+                <h2 class="fw-bold">Dashboard</h2>
+                <p class="text-muted mb-0">
+                    Manage customers, vehicles, and service requests.
+                </p>
+            </div>
+
+            <button
+                class="btn btn-primary"
+                onclick="openAddServiceForm()">
+
+                <i class="bi bi-plus-lg"></i>
+                New Service Request
+            </button>
+
+        </div>
+
+        <!-- Statistics -->
+
+        <div class="row g-3 mb-4">
+
+            <div class="col-sm-6 col-xl-3">
+                <div class="card statistic-card border-primary">
+                    <div class="card-body">
+
+                        <div class="statistic-icon bg-primary-subtle text-primary">
+                            <i class="bi bi-clipboard-check"></i>
+                        </div>
+
+                        <h6 class="text-muted mt-3">Total Services</h6>
+                        <h2 id="totalServices">0</h2>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+                <div class="card statistic-card border-warning">
+                    <div class="card-body">
+
+                        <div class="statistic-icon bg-warning-subtle text-warning">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+
+                        <h6 class="text-muted mt-3">Pending</h6>
+                        <h2 id="pendingServices">0</h2>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+                <div class="card statistic-card border-info">
+                    <div class="card-body">
+
+                        <div class="statistic-icon bg-info-subtle text-info">
+                            <i class="bi bi-gear"></i>
+                        </div>
+
+                        <h6 class="text-muted mt-3">In Progress</h6>
+                        <h2 id="progressServices">0</h2>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+                <div class="card statistic-card border-success">
+                    <div class="card-body">
+
+                        <div class="statistic-icon bg-success-subtle text-success">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+
+                        <h6 class="text-muted mt-3">Completed</h6>
+                        <h2 id="completedServices">0</h2>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Additional Statistics -->
+
+        <div class="row g-3 mb-4">
+
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h6 class="text-muted">Completed Revenue</h6>
+
+                        <h2 class="text-success">
+                            ₹<span id="totalRevenue">0.00</span>
+                        </h2>
+
+                        <small class="text-muted">
+                            Revenue from completed services
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h6 class="text-muted">Average Service Cost</h6>
+
+                        <h2 class="text-primary">
+                            ₹<span id="averageCost">0.00</span>
+                        </h2>
+
+                        <small class="text-muted">
+                            Average estimated service cost
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h6 class="text-muted">Today's Services</h6>
+
+                        <h2 class="text-info" id="todayServices">
+                            0
+                        </h2>
+
+                        <small class="text-muted">
+                            Services scheduled today
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Search and Filters -->
+
+        <div class="card mb-4">
+            <div class="card-body">
+
+                <div class="row g-2">
+
+                    <div class="col-lg-5">
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-search"></i>
+                            </span>
+
+                            <input
+                                type="text"
+                                id="searchInput"
+                                class="form-control"
+                                placeholder="Search customer, phone, vehicle...">
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <select id="statusFilter" class="form-select">
+                            <option value="">All Statuses</option>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <select id="serviceFilter" class="form-select">
+                            <option value="">All Services</option>
+                            <option>General Service</option>
+                            <option>Oil Change</option>
+                            <option>Engine Repair</option>
+                            <option>Brake Service</option>
+                            <option>Tyre Replacement</option>
+                            <option>Battery Replacement</option>
+                            <option>AC Repair</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <button
+                            class="btn btn-outline-secondary w-100"
+                            onclick="clearFilters()">
+
+                            <i class="bi bi-x-circle"></i>
+                            Clear
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Service Table -->
+
+        <div class="card">
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <h4 class="mb-0">
+                        Service Requests
+                    </h4>
+
+                    <button
+                        class="btn btn-outline-primary btn-sm"
+                        onclick="exportCSV()">
+
+                        <i class="bi bi-download"></i>
+                        Export CSV
+                    </button>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Customer</th>
+                                <th>Vehicle</th>
+                                <th>Service</th>
+                                <th>Date</th>
+                                <th>Cost</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="serviceTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+                <div id="emptyMessage" class="empty-message d-none">
+                    <i class="bi bi-inbox"></i>
+                    <p>No service requests found.</p>
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="openAddServiceForm()">
+
+                        Add First Service
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Add/Edit Service Page -->
+
+    <main id="serviceFormPage" class="container py-4 d-none">
+
+        <div class="form-container">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+                    <h2 id="formTitle" class="fw-bold">
+                        Add Service Request
+                    </h2>
+
+                    <p class="text-muted">
+                        Enter customer and vehicle details.
+                    </p>
+                </div>
+
+                <button
+                    class="btn btn-outline-secondary"
+                    onclick="showDashboard()">
+
+                    <i class="bi bi-arrow-left"></i>
+                    Back
+                </button>
+
+            </div>
+
+            <div id="formMessage"></div>
+
+            <form id="serviceForm">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Customer Name *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="customerName"
+                            class="form-control"
+                            required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Phone Number *
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            class="form-control"
+                            required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            class="form-control">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Vehicle Number *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="vehicleNumber"
+                            class="form-control"
+                            placeholder="KA01AB1234"
+                            required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Vehicle Model
+                        </label>
+
+                        <input
+                            type="text"
+                            id="vehicleModel"
+                            class="form-control"
+                            placeholder="Honda City">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Service Type *
+                        </label>
+
+                        <select
+                            id="serviceType"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Select service type
+                            </option>
+
+                            <option>General Service</option>
+                            <option>Oil Change</option>
+                            <option>Engine Repair</option>
+                            <option>Brake Service</option>
+                            <option>Tyre Replacement</option>
+                            <option>Battery Replacement</option>
+                            <option>AC Repair</option>
+                            <option>Other</option>
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Service Date *
+                        </label>
+
+                        <input
+                            type="date"
+                            id="serviceDate"
+                            class="form-control"
+                            required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            Estimated Cost
+                        </label>
+
+                        <input
+                            type="number"
+                            id="estimatedCost"
+                            class="form-control"
+                            min="0"
+                            step="0.01"
+                            value="0">
+                    </div>
+
+                    <div
+                        id="statusField"
+                        class="col-md-6 mb-3 d-none">
+
+                        <label class="form-label">
+                            Status
+                        </label>
+
+                        <select id="status" class="form-select">
+                            <option>Pending</option>
+                            <option>In Progress</option>
+                            <option>Completed</option>
+                            <option>Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">
+                            Description
+                        </label>
+
+                        <textarea
+                            id="description"
+                            class="form-control"
+                            rows="4"
+                            placeholder="Describe the issue or required work">
+                        </textarea>
+                    </div>
+
+                </div>
+
+                <button class="btn btn-primary">
+                    <i class="bi bi-save"></i>
+                    <span id="saveButtonText">Save Service</span>
+                </button>
+
+                <button
+                    type="reset"
+                    class="btn btn-outline-secondary"
+                    onclick="resetServiceForm()">
+
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                    Reset
+                </button>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</section>
+
+<script>
+    /*
+     * ============================
+     * SERVICE CENTER APPLICATION
+     * ============================
+     */
+
+    const DEMO_USERNAME = "admin";
+    const DEMO_PASSWORD = "admin123";
+
+    let editingServiceId = null;
+
+    const defaultServices = [
+        {
+            id: 1001,
+            customerName: "Rahul Sharma",
+            phone: "9876543210",
+            email: "rahul@example.com",
+            vehicleNumber: "KA01AB1234",
+            vehicleModel: "Honda City",
+            serviceType: "General Service",
+            serviceDate: getToday(),
+            estimatedCost: 2500,
+            description: "Full vehicle inspection and general maintenance.",
+            status: "Pending",
+            createdAt: new Date().toISOString()
+        },
+        {
+            id: 1002,
+            customerName: "Priya Kumar",
+            phone: "9123456780",
+            email: "priya@example.com",
+            vehicleNumber: "KA05CD5678",
+            vehicleModel: "Hyundai Creta",
+            serviceType: "Oil Change",
+            serviceDate: getToday(),
+            estimatedCost: 1800,
+            description: "Engine oil and oil filter replacement.",
+            status: "In Progress",
+            createdAt: new Date().toISOString()
+        },
+        {
+            id: 1003,
+            customerName: "Amit Verma",
+            phone: "9988776655",
+            email: "amit@example.com",
+            vehicleNumber: "MH12EF9999",
+            vehicleModel: "Maruti Swift",
+            serviceType: "Brake Service",
+            serviceDate: "2026-08-10",
+            estimatedCost: 3200,
+            description: "Front brake pad replacement.",
+            status: "Completed",
+            createdAt: new Date().toISOString()
+        }
+    ];
+
+    document.addEventListener("DOMContentLoaded", function() {
+        initializeApplication();
+    });
+
+    function initializeApplication() {
+        initializeData();
+        applySavedTheme();
+
+        document
+            .getElementById("loginForm")
+            .addEventListener("submit", handleLogin);
+
+        document
+            .getElementById("togglePassword")
+            .addEventListener("click", togglePassword);
+
+        document
+            .getElementById("serviceForm")
+            .addEventListener("submit", saveServiceForm);
+
+        document
+            .getElementById("searchInput")
+            .addEventListener("input", loadDashboard);
+
+        document
+            .getElementById("statusFilter")
+            .addEventListener("change", loadDashboard);
+
+        document
+            .getElementById("serviceFilter")
+            .addEventListener("change", loadDashboard);
+
+        if (isLoggedIn()) {
+            showApplication();
+        } else {
+            showLogin();
+        }
+    }
+
+    function initializeData() {
+        if (!localStorage.getItem("services")) {
+            localStorage.setItem(
+                "services",
+                JSON.stringify(defaultServices)
+            );
+        }
+    }
+
+    function getServices() {
+        initializeData();
+
+        return JSON.parse(
+            localStorage.getItem("services")
+        ) || [];
+    }
+
+    function saveServices(services) {
+        localStorage.setItem(
+            "services",
+            JSON.stringify(services)
+        );
+    }
+
+    function getToday() {
+        return new Date()
+            .toISOString()
+            .split("T")[0];
+    }
+
+    function isLoggedIn() {
+        return (
+            localStorage.getItem("loggedIn") === "true" ||
+            sessionStorage.getItem("loggedIn") === "true"
+        );
+    }
+
+    function handleLogin(event) {
+        event.preventDefault();
+
+        const username = document
+            .getElementById("username")
+            .value
+            .trim();
+
+        const password = document
+            .getElementById("password")
+            .value;
+
+        const rememberMe = document
+            .getElementById("rememberMe")
+            .checked;
+
+        if (
+            username === DEMO_USERNAME &&
+            password === DEMO_PASSWORD
+        ) {
+            if (rememberMe) {
+                localStorage.setItem("loggedIn", "true");
+            } else {
+                sessionStorage.setItem("loggedIn", "true");
+            }
+
+            localStorage.setItem("currentUser", username);
+
+            document
+                .getElementById("loginMessage")
+                .innerHTML = "";
+
+            showApplication();
+        } else {
+            document
+                .getElementById("loginMessage")
+                .innerHTML = `
+                    <div class="alert alert-danger">
+                        Invalid username or password.
+                    </div>
+                `;
+        }
+    }
+
+    function togglePassword() {
+        const passwordInput =
+            document.getElementById("password");
+
+        const icon =
+            document
+                .getElementById("togglePassword")
+                .querySelector("i");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            icon.className = "bi bi-eye-slash";
+        } else {
+            passwordInput.type = "password";
+            icon.className = "bi bi-eye";
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem("loggedIn");
+        sessionStorage.removeItem("loggedIn");
+        localStorage.removeItem("currentUser");
+
+        showLogin();
+    }
+
+    function showLogin() {
+        document
+            .getElementById("loginPage")
+            .classList.remove("d-none");
+
+        document
+            .getElementById("appPage")
+            .classList.add("d-none");
+
+        document
+            .getElementById("loginForm")
+            .reset();
+    }
+
+    function showApplication() {
+        document
+            .getElementById("loginPage")
+            .classList.add("d-none");
+
+        document
+            .getElementById("appPage")
+            .classList.remove("d-none");
+
+        const currentUser =
+            localStorage.getItem("currentUser");
+
+        document
+            .getElementById("currentUser")
+            .textContent = currentUser || "Admin";
+
+        showDashboard();
+    }
+
+    function showDashboard() {
+        editingServiceId = null;
+
+        document
+            .getElementById("dashboardPage")
+            .classList.remove("d-none");
+
+        document
+            .getElementById("serviceFormPage")
+            .classList.add("d-none");
+
+        loadDashboard();
+    }
+
+    function openAddServiceForm() {
+        editingServiceId = null;
+
+        document
+            .getElementById("dashboardPage")
+            .classList.add("d-none");
+
+        document
+            .getElementById("serviceFormPage")
+            .classList.remove("d-none");
+
+        document
+            .getElementById("formTitle")
+            .textContent = "Add Service Request";
+
+        document
+            .getElementById("saveButtonText")
+            .textContent = "Save Service";
+
+        document
+            .getElementById("statusField")
+            .classList.add("d-none");
+
+        resetServiceForm();
+
+        document
+            .getElementById("serviceDate")
+            .value = getToday();
+    }
+
+    function resetServiceForm() {
+        document
+            .getElementById("serviceForm")
+            .reset();
+
+        document
+            .getElementById("formMessage")
+            .innerHTML = "";
+
+        if (!editingServiceId) {
+            document
+                .getElementById("serviceDate")
+                .value = getToday();
+        }
+    }
+
+    function openEditServiceForm(id) {
+        const service = getServices().find(
+            item => item.id === id
+        );
+
+        if (!service) {
+            alert("Service request not found.");
+            return;
+        }
+
+        editingServiceId = id;
+
+        document
+            .getElementById("dashboardPage")
+            .classList.add("d-none");
+
+        document
+            .getElementById("serviceFormPage")
+            .classList.remove("d-none");
+
+        document
+            .getElementById("formTitle")
+            .textContent = "Edit Service Request";
+
+        document
+            .getElementById("saveButtonText")
+            .textContent = "Update Service";
+
+        document
+            .getElementById("statusField")
+            .classList.remove("d-none");
+
+        document
+            .getElementById("customerName")
+            .value = service.customerName;
+
+        document
+            .getElementById("phone")
+            .value = service.phone;
+
+        document
+            .getElementById("email")
+            .value = service.email;
+
+        document
+            .getElementById("vehicleNumber")
+            .value = service.vehicleNumber;
+
+        document
+            .getElementById("vehicleModel")
+            .value = service.vehicleModel;
+
+        document
+            .getElementById("serviceType")
+            .value = service.serviceType;
+
+        document
+            .getElementById("serviceDate")
+            .value = service.serviceDate;
+
+        document
+            .getElementById("estimatedCost")
+            .value = service.estimatedCost;
+
+        document
+            .getElementById("status")
+            .value = service.status;
+
+        document
+            .getElementById("description")
+            .value = service.description;
+    }
+
+    function saveServiceForm(event) {
+        event.preventDefault();
+
+        const customerName = document
+            .getElementById("customerName")
+            .value
+            .trim();
+
+        const phone = document
+            .getElementById("phone")
+            .value
+            .trim();
+
+        const email = document
+            .getElementById("email")
+            .value
+            .trim();
+
+        const vehicleNumber = document
+            .getElementById("vehicleNumber")
+            .value
+            .trim()
+            .toUpperCase();
+
+        const vehicleModel = document
+            .getElementById("vehicleModel")
+            .value
+            .trim();
+
+        const serviceType = document
+            .getElementById("serviceType")
+            .value;
+
+        const serviceDate = document
+            .getElementById("serviceDate")
+            .value;
+
+        const estimatedCost = Number(
+            document
+                .getElementById("estimatedCost")
+                .value || 0
+        );
+
+        const description = document
+            .getElementById("description")
+            .value
+            .trim();
+
+        const status = editingServiceId
+            ? document.getElementById("status").value
+            : "Pending";
+
+        if (
+            !customerName ||
+            !phone ||
+            !vehicleNumber ||
+            !serviceType ||
+            !serviceDate
+        ) {
+            document
+                .getElementById("formMessage")
+                .innerHTML = `
+                    <div class="alert alert-danger">
+                        Please fill in all required fields.
+                    </div>
+                `;
+
+            return;
+        }
+
+        let services = getServices();
+
+        if (editingServiceId) {
+            services = services.map(service => {
+                if (service.id !== editingServiceId) {
+                    return service;
+                }
+
+                return {
+                    ...service,
+                    customerName,
+                    phone,
+                    email,
+                    vehicleNumber,
+                    vehicleModel,
+                    serviceType,
+                    serviceDate,
+                    estimatedCost,
+                    description,
+                    status
+                };
+            });
+
+            saveServices(services);
+
+            document
+                .getElementById("formMessage")
+                .innerHTML = `
+                    <div class="alert alert-success">
+                        Service request updated successfully.
+                    </div>
+                `;
+
+        } else {
+            const newService = {
+                id: Date.now(),
+                customerName,
+                phone,
+                email,
+                vehicleNumber,
+                vehicleModel,
+                serviceType,
+                serviceDate,
+                estimatedCost,
+                description,
+                status,
+                createdAt: new Date().toISOString()
+            };
+
+            services.push(newService);
+            saveServices(services);
+
+            document
+                .getElementById("formMessage")
+                .innerHTML = `
+                    <div class="alert alert-success">
+                        Service request added successfully.
+                    </div>
+                `;
+        }
+
+        setTimeout(function() {
+            showDashboard();
+        }, 700);
+    }
+
+    function loadDashboard() {
+        const allServices = getServices();
+
+        const searchTerm = (
+            document
+                .getElementById("searchInput")
+                .value || ""
+        ).toLowerCase();
+
+        const statusFilter = document
+            .getElementById("statusFilter")
+            .value;
+
+        const serviceFilter = document
+            .getElementById("serviceFilter")
+            .value;
+
+        const filteredServices = allServices.filter(service => {
+            const searchableText = `
+                ${service.customerName}
+                ${service.phone}
+                ${service.email}
+                ${service.vehicleNumber}
+                ${service.vehicleModel}
+                ${service.serviceType}
+            `.toLowerCase();
+
+            const matchesSearch =
+                searchableText.includes(searchTerm);
+
+            const matchesStatus =
+                !statusFilter ||
+                service.status === statusFilter;
+
+            const matchesService =
+                !serviceFilter ||
+                service.serviceType === serviceFilter;
+
+            return (
+                matchesSearch &&
+                matchesStatus &&
+                matchesService
+            );
+        });
+
+        renderServices(filteredServices);
+        updateStatistics(allServices);
+    }
+
+    function renderServices(services) {
+        const tableBody =
+            document.getElementById("serviceTableBody");
+
+        const emptyMessage =
+            document.getElementById("emptyMessage");
+
+        tableBody.innerHTML = "";
+
+        if (services.length === 0) {
+            emptyMessage.classList.remove("d-none");
+            return;
+        }
+
+        emptyMessage.classList.add("d-none");
+
+        services.forEach(service => {
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>
+                    <span class="badge bg-secondary">
+                        #${service.id}
+                    </span>
+                </td>
+
+                <td>
+                    <strong>
+                        ${escapeHTML(service.customerName)}
+                    </strong>
+                    <br>
+                    <small class="text-muted">
+                        ${escapeHTML(service.phone)}
+                    </small>
+                </td>
+
+                <td>
+                    <strong>
+                        ${escapeHTML(service.vehicleNumber)}
+                    </strong>
+                    <br>
+                    <small class="text-muted">
+                        ${escapeHTML(
+                            service.vehicleModel ||
+                            "Model not provided"
+                        )}
+                    </small>
+                </td>
+
+                <td>
+                    ${escapeHTML(service.serviceType)}
+                </td>
+
+                <td>
+                    ${formatDate(service.serviceDate)}
+                </td>
+
+                <td>
+                    ₹${Number(service.estimatedCost).toFixed(2)}
+                </td>
+
+                <td>
+                    ${getStatusBadge(service.status)}
+                </td>
+
+                <td>
+                    <div class="btn-group btn-group-sm">
+
+                        <button
+                            class="btn btn-outline-primary"
+                            onclick="openEditServiceForm(${service.id})"
+                            title="Edit">
+
+                            <i class="bi bi-pencil"></i>
+                        </button>
+
+                        <button
+                            class="btn btn-outline-danger"
+                            onclick="deleteService(${service.id})"
+                            title="Delete">
+
+                            <i class="bi bi-trash"></i>
+                        </button>
+
+                    </div>
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+    }
+
+    function updateStatistics(services) {
+        const total = services.length;
+
+        const pending = services.filter(
+            service => service.status === "Pending"
+        ).length;
+
+        const inProgress = services.filter(
+            service => service.status === "In Progress"
+        ).length;
+
+        const completed = services.filter(
+            service => service.status === "Completed"
+        ).length;
+
+        const revenue = services
+            .filter(service => service.status === "Completed")
+            .reduce(
+                (sum, service) =>
+                    sum + Number(service.estimatedCost || 0),
+                0
+            );
+
+        const averageCost = total === 0
+            ? 0
+            : services.reduce(
+                (sum, service) =>
+                    sum + Number(service.estimatedCost || 0),
+                0
+            ) / total;
+
+        const todayCount = services.filter(
+            service => service.serviceDate === getToday()
+        ).length;
+
+        setText("totalServices", total);
+        setText("pendingServices", pending);
+        setText("progressServices", inProgress);
+        setText("completedServices", completed);
+        setText("totalRevenue", revenue.toFixed(2));
+        setText("averageCost", averageCost.toFixed(2));
+        setText("todayServices", todayCount);
+    }
+
+    function deleteService(id) {
+        const service = getServices().find(
+            item => item.id === id
+        );
+
+        if (!service) {
+            return;
+        }
+
+        const confirmed = confirm(
+            `Delete service request for ${service.customerName}?`
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        const updatedServices = getServices().filter(
+            item => item.id !== id
+        );
+
+        saveServices(updatedServices);
+        loadDashboard();
+    }
+
+    function clearFilters() {
+        document
+            .getElementById("searchInput")
+            .value = "";
+
+        document
+            .getElementById("statusFilter")
+            .value = "";
+
+        document
+            .getElementById("serviceFilter")
+            .value = "";
+
+        loadDashboard();
+    }
+
+    function exportCSV() {
+        const services = getServices();
+
+        if (services.length === 0) {
+            alert("There are no services to export.");
+            return;
+        }
+
+        const headers = [
+            "ID",
+            "Customer Name",
+            "Phone",
+            "Email",
+            "Vehicle Number",
+            "Vehicle Model",
+            "Service Type",
+            "Service Date",
+            "Estimated Cost",
+            "Status",
+            "Description"
+        ];
+
+        const rows = services.map(service => [
+            service.id,
+            service.customerName,
+            service.phone,
+            service.email,
+            service.vehicleNumber,
+            service.vehicleModel,
+            service.serviceType,
+            service.serviceDate,
+            service.estimatedCost,
+            service.status,
+            service.description
+        ]);
+
+        const csvContent = [
+            headers,
+            ...rows
+        ]
+        .map(row =>
+            row
+                .map(value =>
+                    `"${String(value || "")
+                        .replace(/"/g, '""')}"`
+                )
+                .join(",")
+        )
+        .join("\n");
+
+        const blob = new Blob(
+            [csvContent],
+            {
+                type: "text/csv;charset=utf-8;"
+            }
+        );
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = "service-records.csv";
+        link.click();
+
+        URL.revokeObjectURL(url);
+    }
+
+    function getStatusBadge(status) {
+        const statusClasses = {
+            "Pending": "bg-warning text-dark",
+            "In Progress": "bg-info text-dark",
+            "Completed": "bg-success",
+            "Cancelled": "bg-danger"
+        };
+
+        return `
+            <span class="badge ${
+                statusClasses[status] || "bg-secondary"
+            }">
+                ${status}
+            </span>
+        `;
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) {
+            return "-";
+        }
+
+        const date = new Date(
+            dateString + "T00:00:00"
+        );
+
+        return date.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+    }
+
+    function toggleTheme() {
+        const currentTheme =
+            document.documentElement
+                .getAttribute("data-bs-theme") || "light";
+
+        const newTheme =
+            currentTheme === "dark"
+                ? "light"
+                : "dark";
+
+        document.documentElement
+            .setAttribute("data-bs-theme", newTheme);
+
+        localStorage.setItem("theme", newTheme);
+
+        updateThemeIcons(newTheme);
+    }
+
+    function applySavedTheme() {
+        const savedTheme =
+            localStorage.getItem("theme") || "light";
+
+        document.documentElement
+            .setAttribute("data-bs-theme", savedTheme);
+
+        updateThemeIcons(savedTheme);
+    }
+
+    function updateThemeIcons(theme) {
+        const icons = [
+            document.getElementById("themeIcon"),
+            document.getElementById("loginThemeIcon")
+        ];
+
+        icons.forEach(icon => {
+            if (!icon) {
+                return;
+            }
+
+            if (theme === "dark") {
+                icon.className = "bi bi-sun";
+            } else {
+                icon.className = "bi bi-moon-stars";
+            }
+        });
+    }
+
+    function setText(id, value) {
+        const element =
+            document.getElementById(id);
+
+        if (element) {
+            element.textContent = value;
+        }
+    }
+
+    function escapeHTML(value) {
+        return String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+</script>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>
